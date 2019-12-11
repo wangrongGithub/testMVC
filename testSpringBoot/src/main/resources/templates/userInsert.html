@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>商品详情</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<body>
+<script>
+    function formsubmit(){
+        alert("formsubmit ")
+
+        var username = document.getElementById("username").value;
+        alert("/insertUser/"+username)
+        $.get("http://localhost:8090/insertUser/"+username);
+        alert("/insertUser/"+username)
+//17031211569
+        $.get("http://localhost:8090/insertUser/"+username, function(result){
+
+            alert("formsubmit get")
+            if(result=="OK")
+            {
+                location.replace(location);
+
+            }
+            else
+            {
+                $("div").html("Insert error");
+            }
+        });
+    }
+
+</script>
+<div class="panel panel-default">
+
+    请输入插入的用户姓名啊： <input type="text" name="username" id="username"/>
+
+    <button type="button" value="Click Me!" onclick="formsubmit()">Click Me!</button>
+
+
+</div>
+</body>
+
+</html>
