@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>订单详情</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- jquery -->
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" src="/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/jquery-validation/localization/messages_zh.min.js"></script>
+    <!-- layer -->
+    <script type="text/javascript" src="/layer/layer.js"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" src="/js/md5.min.js"></script>
+    <!-- common.js -->
+    <script type="text/javascript" src="/js/common.js"></script>
+</head>
+<body>
+<div class="panel panel-default">
+  <div class="panel-heading">秒杀订单详情</div>
+  <table class="table" id="goodslist">
+        <tr>  
+        <td>商品名称</td>  
+        <td colspan="3" id="goodsName"></td> 
+     </tr>  
+     <tr>  
+        <td>商品图片</td>  
+        <td colspan="2"><img  id="goodsImg" width="200" height="200" /></td>  
+     </tr>
+      <tr>  
+        <td>订单价格</td>  
+        <td colspan="2"  id="orderPrice"></td>  
+     </tr>
+     <tr>
+     		<td>下单时间</td>  
+        	<td id="createDate" colspan="2"></td>  
+     </tr>
+     <tr>
+     	<td>订单状态</td>  
+        <td id="orderStatus">
+        </td>  
+        <td>
+        	<button class="btn btn-primary btn-block" type="submit" id="payButton">立即支付</button>
+        </td>
+     </tr>
+      <tr>
+     		<td>收货人</td>  
+        	<td colspan="2">XXX  18812341234</td>  
+     </tr>
+     <tr>
+     		<td>收货地址</td>  
+        	<td colspan="2">北京市昌平区回龙观龙博一区</td>  
+     </tr>
+  </table>
+</div>
+</body>
+</html>
+<script>
+
+    /*
+    * long g_id;
+	String g_name;
+	String g_title;
+	String g_img;
+	String g_detail;
+	double g_price;
+	long g_stock;
+    *
+    * */
+function render(detail){
+	var goods = detail.goods;
+	var order = detail.order;
+    alert(goods.g_img+","+goods.msg_start+","+goods.g_id+","+goods.g_price+","+goods.msg_price);
+    alert("日期去"+goods.msg_start);
+	$("#goodsName").text(goods.g_name);
+	$("#goodsImg").attr("src", goods.g_img);
+	$("#orderPrice").text(order.g_price);
+
+	$("#createDate").text(new Date(parseInt(order.o_createdate)).toLocaleString().substr(0,17));
+	var status = "";
+	if(order.o_status == 0){
+		status = "未支付"
+	}else if(order.o_status == 1){
+		status = "待发货";
+	}
+	$("#orderStatus").text(status);
+	
+}
+
+$(function(){
+    alert("马上要进行请求了");
+	getOrderDetail();
+})
+
+function getOrderDetail(){
+    //order/detail?orderId=20
+    var urlinfo=window.location.href; //获取当前页面的url
+    var len=urlinfo.length;//获取url的长度
+    var offset=urlinfo.indexOf("?");//设置参数字符串开始的位置
+    var newsidinfo=urlinfo.substr(offset,len)//取出参数字符串 这里会获得类似“id=1”这样的字符串
+    var newsids=newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+    var newsid=newsids[1];//得到参数值
+    alert("您要传递的参数值是"+newsid);
+    alert("马上要进行请求了");
+	//var orderId = g_getQueryString("orderId");
+    alert("orderId");
+    alert(urlinfo);
+	$.ajax({
+		url:"/order/detail",
+		type:"GET",
+		data:{
+			orderId:newsid
+		},
+		success:function(data){
+		    alert("进来了");
+			if(data.code == 0){
+				render(data.data);
+			}else{
+				layer.msg(data.msg);
+			}
+		},
+		error:function(){
+			layer.msg("客户端请求有误");
+		}
+	});
+}
+
+
+
+</script>
